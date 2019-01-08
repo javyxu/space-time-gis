@@ -1,0 +1,18 @@
+{
+  "name": "Framework",
+  "version": "0.01",
+  "description": "Superset is a data exploration platform designed to be visual, intuitive, and interactive.",
+  "license": "Apache-2.0",
+  "directories": {
+    "doc": "docs",
+    "test": "spec"
+  },
+  "keywords": [
+    "big",
+    "data",
+    "deal",
+    "analysis",
+    "database",
+    "flask"
+  ]
+}
