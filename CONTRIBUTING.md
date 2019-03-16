@@ -11,6 +11,7 @@
 * numpy 
 * scipy
 * matplotlib
+* seaborn
 * xarray
 
 ### geopy
@@ -29,7 +30,7 @@
 ### visualization
 1. jupyter
 2. ipyleaflet
-3. mapbox
+3. mapbox-gl
 4. ipywidgets
 
 ### RESTAPI
