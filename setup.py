@@ -16,8 +16,8 @@ with io.open('README.md', encoding='utf-8') as f:
 
 
 setup(
-    name='SpacetimeGIS',
-    description=(''),
+    name='space-time-gis',
+    description=('Store, index, query, transform and image-recognition spatio-temporal in HBase、 PostGIS and Spark.'),
     long_description=long_description,
     long_description_content_type='text/markdown',
     version='0.0.1',
