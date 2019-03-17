@@ -7,7 +7,6 @@
 # Description: File's test_helloworld.py module
 '''
 
-import os
 import unittest
 
 from spacetimegis.core import helloworld
