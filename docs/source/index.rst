@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to space-time-gis's documentation!
+Space-time GIS
 ==========================================
 
 .. toctree::

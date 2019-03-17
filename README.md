@@ -12,7 +12,7 @@ pip install sapce-time-gis
 
 ## Documentation
 
-For more information on the package content, visit [thedocs](https://github.com/javyxu/space-time-gis/blob/master/docs/intro.md).
+For more information on the package content, visit [thedocs](https://space-time-gis.readthedocs.io/en/latest/).
 
 ## Contributions
 

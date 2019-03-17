@@ -14,4 +14,4 @@ You can get the library directly from PyPI:
 
     > pip install spacetimegis
 
-.. note:: SpaceTimeGIS requires Python 3 or later.
+.. note:: `SpaceTime GIS` requires Python 3 or later.
