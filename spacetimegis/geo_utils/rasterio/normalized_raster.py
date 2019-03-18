@@ -31,7 +31,7 @@ class NormalizedRaster(object):
             maxval = tmpdata.max() if maxval is None else maxval
             tmpdata = (tmpdata - [minval]) / (maxval - minval)
             
-            new_filename = os.path.join(self.outputpath, os.path.basename(filename.as_posix()).split('.')[0] + '_linear_normal.tif')
+            new_filename = os.path.join(self.outputpath, os.path.basename(srcfilename).split('.')[0] + '_linear_normal.tif')
             new_dataset = rasterio.open(new_filename, 'w', driver='GTiff', 
                                         height=ds.height, width=ds.width, 
                                         count=len(tmpdata), dtype=tmpdata.dtype, crs=ds.crs, transform=ds.transform)
@@ -52,7 +52,7 @@ class NormalizedRaster(object):
             tmpdata = ds.read()
             tmpdata = (tmpdata - [tmpdata.mean()]) / tmpdata.std()
             
-            new_filename = os.path.join(self.outputpath, os.path.basename(filename.as_posix()).split('.')[0] + '_std_normal.tif')
+            new_filename = os.path.join(self.outputpath, os.path.basename(srcfilename).split('.')[0] + '_std_normal.tif')
             new_dataset = rasterio.open(new_filename, 'w', driver='GTiff', 
                                         height=ds.height, width=ds.width, 
                                         count=len(tmpdata), dtype=tmpdata.dtype, crs=ds.crs, transform=ds.transform)
