@@ -9,14 +9,19 @@
 
 import os
 import subprocess
+from osgeo import gdal
 
-def singlebandmerge(mergedtif, *bands, pixelx, pixely):
+def singlebandmerge(mergedtif, *bands, pixelband=0):
     """
     """
-    pixelx = pixelx if pixelx is not None else 
-    pixely = pixely if pixely is not None else 
+    # if pixelx is None or pixely is None:
+    ds = gdal.Open(bands[0])
+    pixelx = ds.GetGeoTransform()[1]
+    pixely = ds.GetGeoTransform()[5]
+    del ds
+
     cmd = 'gdal_merge.py -ps {0} {1} -separate -of GTiff -o {2} {3}'.format(pixelx, pixely, \
-        mergedtif, ' '.join(i in for bands))
+        mergedtif, ' '.join(i for i in bands))
     subprocess.call(cmd, shell=True)
 
 

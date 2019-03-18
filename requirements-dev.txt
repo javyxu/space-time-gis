@@ -1,2 +1,3 @@
 console_log==0.2.10
 rasterio
+gdal

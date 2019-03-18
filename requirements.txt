@@ -1,2 +1,3 @@
 # bleach==2.1.2
 rasterio
+gdal
