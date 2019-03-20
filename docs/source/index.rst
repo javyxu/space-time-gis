@@ -10,5 +10,7 @@ Space-time GIS
    :maxdepth: 2
    :caption: Contents:
 
+   intro
    install
+   examples
    contributing
