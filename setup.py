@@ -16,7 +16,7 @@ with io.open('README.md', encoding='utf-8') as f:
 
 
 setup(
-    name='space-time-gis',
+    name='spacetimegis',
     description=('Store, index, query, transform and image-recognition spatio-temporal in HBase、 PostGIS and Spark.'),
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -24,7 +24,14 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
+    scripts=['spacetimegis/bin/spacetimegis'],
     install_requires=[
+        'alembic',
+        'colorama',
+        'gunicorn',
+        'Flask-Migrate',
+        'flask_cors',
+        'pathlib2'
     ],
     author='Javy xu',
     author_email='xujavy@gmail.com',
