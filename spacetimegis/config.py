@@ -10,6 +10,7 @@ import os
 from collections import OrderedDict
 from backports.configparser import ConfigParser, _UNSET, NoOptionError
 
+
 def expand_env_var(env_var):
     """
     Expands (potentially nested) env vars by repeatedly applying
@@ -96,14 +97,10 @@ class SpacetimeGISConfigParser(ConfigParser):
         if self.spacetimegis_defaults.has_option(section, key) or 'fallback' in kwargs:
             return expand_env_var(
                 self.spacetimegis_defaults.get(section, key, **kwargs))
-        # else:
-        #     log.warning(
-        #         "section/key [%s/%s] not found in config", section, key
-        #     )
-
-        #     raise AirflowConfigException(
-        #         "section/key [{section}/{key}] not found "
-        #         "in config".format(section=section, key=key))
+        else:
+            pass
+            # logger.writelog(LogLevel.warning, 
+            #     "section/key [%s/%s] not found in config", section, key)
 
     def getboolean(self, section, key, **kwargs):
         val = str(self.get(section, key, **kwargs)).lower().strip()
@@ -114,6 +111,9 @@ class SpacetimeGISConfigParser(ConfigParser):
         elif val in ('f', 'false', '0'):
             return False
         else:
+            # logger.writelog(LogLevel.error, 
+            #     'The value for configuration option "{}:{}" is not a '
+            #     'boolean (received "{}").'.format(section, key, val))
             raise ValueError(
                 'The value for configuration option "{}:{}" is not a '
                 'boolean (received "{}").'.format(section, key, val))
@@ -250,16 +250,8 @@ class SpacetimeGISConfigParser(ConfigParser):
 
 
 def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        pass
-        # if exc.errno == errno.EEXIST and os.path.isdir(path):
-        #     pass
-        # else:
-        #     raise AirflowConfigException(
-        #         'Error creating {}: {}'.format(path, exc.strerror))
-
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 def get_spacetimegis_home():
     return expand_env_var(os.environ.get('SPACETIMEGIS_HOME', '~/.spacetimegis'))
@@ -273,7 +265,6 @@ def get_spacetimegis_config(spacetimegis_home):
 
 # Setting SPACETIMEGIS_HOME and SPACETIMEGIS_CONFIG from environment variables, using
 # "~/.spacetimegis" and "$SPACETIMEGIS_HOME/spacetimegis.cfg" respectively as defaults.
-
 SPACETIMEGIS_HOME = get_spacetimegis_home()
 SPACETIMEGIS_CONFIG = get_spacetimegis_config(SPACETIMEGIS_HOME)
 mkdir_p(SPACETIMEGIS_HOME)
@@ -303,24 +294,5 @@ if not os.path.isfile(SPACETIMEGIS_CONFIG):
 conf = SpacetimeGISConfigParser(default_config=parameterized_config(DEFAULT_CONFIG))
 
 conf.read(SPACETIMEGIS_CONFIG)
-
-# if conf.has_option('core', 'SPACETIMEGIS_HOME'):
-#     msg = (
-#         'Specifying both SPACETIMEGIS_HOME environment variable and spacetimegis_home '
-#         'in the config file is deprecated. Please use only the SPACETIMEGIS_HOME '
-#         'environment variable and remove the config file entry.'
-#     )
-#     if 'SPACETIMEGIS_HOME' in os.environ:
-#         warnings.warn(msg, category=DeprecationWarning)
-#     elif conf.get('core', 'spacetimegis_home') == SPACETIMEGIS_HOME:
-#         warnings.warn(
-#             'Specifying spacetimegis_home in the config file is deprecated. As you '
-#             'have left it at the default value you should remove the setting '
-#             'from your airflow.cfg and suffer no change in behaviour.',
-#             category=DeprecationWarning,
-#         )
-#     else:
-#         SPACETIMEGIS_HOME = conf.get('core', 'spacetimegis_home')
-        # warnings.warn(msg, category=DeprecationWarning)
 
 cfg = conf.as_dict()

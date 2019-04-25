@@ -24,7 +24,6 @@ config = app.config
 @app.cli.command()
 def init():
     """Inits the spacetimegis application"""
-    # utils.get_or_create_main_db()
     pass
 
 def create_app(script_info=None):
@@ -60,13 +59,13 @@ def console_log_run(app, port):
 @click.option('--debug', '-d', is_flag=True, help='Start the web server in debug mode')
 @click.option('--console-log', is_flag=True,
               help='Create logger that logs to the browser console (implies -d)')
-@click.option('--address', '-a', default=config.get('WEBSERVER_ADDRESS', '0.0.0.0'),
+@click.option('--address', '-a', default=config.get('WEBSERVER_ADDRESS'),
               help='Specify the address to which to bind the web server')
-@click.option('--port', '-p', default=config.get('WEBSERVER_PORT', 9000),
+@click.option('--port', '-p', default=config.get('WEBSERVER_PORT'),
               help='Specify the port on which to run the web server')
-@click.option('--workers', '-w', default=config.get('WORKERS', 1),
+@click.option('--workers', '-w', default=config.get('WORKERS'),
               help='Number of gunicorn web server workers to fire up [DEPRECATED]')
-@click.option('--timeout', '-t', default=config.get('WEBSERVER_TIMEOUT', 100),
+@click.option('--timeout', '-t', default=config.get('WEBSERVER_TIMEOUT'),
               help='Specify the timeout (seconds) for the '
                    'gunicorn web server [DEPRECATED]')
 @click.option('--socket', '-s', default=config.get('WEBSERVER_SOCKET'),

@@ -20,8 +20,8 @@ from spacetimegis import config
 
 app = Flask(__name__)
 # app.config.from_object(config)
-app.config.update(dict(config.cfg.get('core')))
-app.config.update(dict(config.cfg.get('webserver')))
+app.config.update(config.cfg.get('core'))
+app.config.update(config.cfg.get('webserver'))
 
 db = SQLAlchemy(app)
 
