@@ -7,7 +7,11 @@ The package requires Python version **>=3.6**. It can be installed with:
 
 ```
 pip install -r requirements.txt
-pip install sapce-time-gis
+pip install spacetimegis
+
+spacetimegis init
+spacetimegis db upgrade
+spacetimegis runserver
 ```
 
 ## Documentation
