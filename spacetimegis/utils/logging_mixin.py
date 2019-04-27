@@ -18,12 +18,12 @@ import os
 
 from spacetimegis.constants import LogLevel
 
-from spacetimegis import app
+from spacetimegis.config import cfg
 
 path = os.path.dirname(os.path.realpath(__file__))
 logconfig = os.path.join(path, "../../logconfig.yml")
 
-logdir = app.config['BASE_LOG_FOLDER']
+logdir = cfg.get('core')['BASE_LOG_FOLDER']
 if not os.path.exists(logdir):
     os.mkdir(logdir)
 
@@ -47,5 +47,20 @@ class LoggingMixin(object):
             self.logger.error(msg)
         elif logLevel is LogLevel.crit:
             self.logger.critical(msg)
+    
+    def writedebuglog(self, msg):
+        self.writelog(LogLevel.debug, msg)
+    
+    def writeinfolog(self, msg):
+        self.writelog(LogLevel.info, msg)
+
+    def writewarninglog(self, msg):
+        self.writelog(LogLevel.warning, msg)
+
+    def writeerrorlog(self, msg):
+        self.writelog(LogLevel.error, msg)
+    
+    def writecritlog(self, msg):
+        self.writelog(LogLevel.crit, msg)
 
 logger = LoggingMixin()
