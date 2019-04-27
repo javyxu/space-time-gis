@@ -39,20 +39,12 @@ DEFAULT_CONFIG = _read_default_config_file('default_spacetimegis.cfg')
 
 class SpacetimeGISConfigParser(ConfigParser):
 
-    # These configuration elements can be fetched as the stdout of commands
-    # following the "{section}__{name}__cmd" pattern, the idea behind this
-    # is to not store password on boxes in text files.
-    as_command_stdout = {
-        ('core', 'sql_alchemy_conn'),
-    }
-
     def __init__(self, default_config=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.spacetimegis_defaults = ConfigParser(*args, **kwargs)
         if not default_config:
             self.spacetimegis_defaults.read_string(default_config)
-
 
     @staticmethod
     def _env_var_name(section, key):
@@ -63,14 +55,6 @@ class SpacetimeGISConfigParser(ConfigParser):
         env_var = self._env_var_name(section, key)
         if env_var in os.environ:
             return expand_env_var(os.environ[env_var])
-
-    def _get_cmd_option(self, section, key):
-        fallback_key = key + '_cmd'
-        # if this is a valid command key...
-        if (section, key) in self.as_command_stdout:
-            if super().has_option(section, fallback_key):
-                command = super().get(section, fallback_key)
-                return run_command(command)
 
     def get(self, section, key, **kwargs):
         section = str(section).lower()
@@ -87,20 +71,11 @@ class SpacetimeGISConfigParser(ConfigParser):
             # separate the config from default config.
             return expand_env_var(
                 super().get(section, key, **kwargs))
-
-        # ...then commands
-        option = self._get_cmd_option(section, key)
-        if option:
-            return option
         
         # ...then the default config
         if self.spacetimegis_defaults.has_option(section, key) or 'fallback' in kwargs:
             return expand_env_var(
                 self.spacetimegis_defaults.get(section, key, **kwargs))
-        else:
-            pass
-            # logger.writelog(LogLevel.warning, 
-            #     "section/key [%s/%s] not found in config", section, key)
 
     def getboolean(self, section, key, **kwargs):
         val = str(self.get(section, key, **kwargs)).lower().strip()
@@ -233,19 +208,6 @@ class SpacetimeGISConfigParser(ConfigParser):
             cfg.setdefault(section.lower(), OrderedDict()).update(
                 {key.lower(): opt})
 
-        # add bash commands
-        for (section, key) in self.as_command_stdout:
-            opt = self._get_cmd_option(section, key)
-            if opt:
-                if not display_sensitive:
-                    opt = '< hidden >'
-                if display_source:
-                    opt = (opt, 'cmd')
-                elif raw:
-                    opt = opt.replace('%', '%%')
-                cfg.setdefault(section, OrderedDict()).update({key: opt})
-                del cfg[section][key + '_cmd']
-        
         return cfg
 
 
@@ -282,10 +244,6 @@ TEMPLATE_START = (
     '# ----------------------- TEMPLATE BEGINS HERE -----------------------')
 
 if not os.path.isfile(SPACETIMEGIS_CONFIG):
-    # log.info(
-    #     'Creating new Airflow config file in: %s',
-    #     SPACETIMEGIS_CONFIG
-    # )
     with open(SPACETIMEGIS_CONFIG, 'w') as f:
         cfg = parameterized_config(DEFAULT_CONFIG)
         cfg = cfg.split(TEMPLATE_START)[-1].strip()

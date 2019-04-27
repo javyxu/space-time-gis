@@ -16,17 +16,30 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from spacetimegis import config
+from spacetimegis.config import cfg
+
+APP_DIR = os.path.dirname(__file__)
 
 app = Flask(__name__)
 # app.config.from_object(config)
-app.config.update(config.cfg.get('core'))
-app.config.update(config.cfg.get('webserver'))
+app.config.update(cfg.get('core'))
+app.config.update(cfg.get('webserver'))
 
 db = SQLAlchemy(app)
 
-APP_DIR = os.path.dirname(__file__)
 migrate = Migrate(app, db, directory=APP_DIR + '/migrations')
 
+# Flask-Cors
+if app.config.get('ENABLE_CORS') is True:
+    from flask_cors import CORS
+    CORS(app, supports_credentials=True)
+
+# Flask-Compress
+if app.config.get('ENABLE_FLASK_COMPRESS') is True:
+    from flask_compress import Compress
+    Compress(app)
+
+from spacetimegis.views.blueprint_api import index_bp
+app.register_blueprint(index_bp, url_prefix='/api/v1')
 
 from spacetimegis import views  # noqa
