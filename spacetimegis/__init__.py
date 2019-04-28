@@ -39,7 +39,9 @@ if app.config.get('ENABLE_FLASK_COMPRESS') is True:
     from flask_compress import Compress
     Compress(app)
 
-from spacetimegis.views.blueprint_api import index_bp
-app.register_blueprint(index_bp, url_prefix='/api/v1')
-
-from spacetimegis import views  # noqa
+# Flask-Blueprint
+from spacetimegis.views import blueprint_api, core_api, download_api, ml_api
+app.register_blueprint(blueprint_api.index_bp, url_prefix='/api/v1')
+app.register_blueprint(core_api.core_bp, url_prefix='/api/v1/core')
+app.register_blueprint(download_api.download_bp, url_prefix='/api/v1/download')
+app.register_blueprint(ml_api.ml_bp, url_prefix='/api/v1/machinelearning')

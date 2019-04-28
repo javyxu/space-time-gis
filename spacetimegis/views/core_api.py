@@ -5,24 +5,16 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from spacetimegis import app, db
+from spacetimegis import db
 from spacetimegis.models import core
 from spacetimegis.utils.logging_mixin import logger
 
-from flask import request
+from flask import request, Blueprint
 from .utils import json_result
 
-@app.route('/helloworld')
-def helloworld():
-    return json_result(200, 'Hello World!')
+core_bp = Blueprint('core', __name__)
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return json_result(200, 'Hello Space Time GIS!')
-
-
-@app.route('/getdbs', methods=['GET'])
+@core_bp.route('/getdbs', methods=['GET'])
 def get_dbs():
     try:
         session = db.session
@@ -40,7 +32,7 @@ def get_dbs():
         return json_result(code=500, msg=str(e))
 
 
-@app.route('/adddbs', methods=['POST'])
+@core_bp.route('/adddbs', methods=['POST'])
 def adddbs():
     try:
         session = db.session
@@ -53,7 +45,7 @@ def adddbs():
         logger.writeerrorlog(e)
         return json_result(code=500, result=str(e))
 
-@app.route('/deletedbs', methods=['DELETE'])
+@core_bp.route('/deletedbs', methods=['DELETE'])
 def deletedbs():
     try:
         id = dict(request.json).get('id')

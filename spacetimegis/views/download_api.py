@@ -12,15 +12,16 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from flask import request
+from flask import request, Blueprint
 
-from spacetimegis import app
 from spacetimegis.utils.logging_mixin import logger
 
 from spacetimegis.data.download.download_agora import * 
 from .utils import json_result
 
-@app.route('/download_agora', methods=['GET'])
+download_bp = Blueprint('download', __name__)
+
+@download_bp.route('/download_agora', methods=['GET'])
 def download_agora():
     try:
         path = request.args.get('savepath')
