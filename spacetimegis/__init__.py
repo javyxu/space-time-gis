@@ -21,9 +21,7 @@ from spacetimegis.config import cfg
 APP_DIR = os.path.dirname(__file__)
 
 app = Flask(__name__)
-# app.config.from_object(config)
-app.config.update(cfg.get('core'))
-app.config.update(cfg.get('webserver'))
+app.config.update(cfg)
 
 db = SQLAlchemy(app)
 
