@@ -11,6 +11,7 @@ from spacetimegis.utils.logging_mixin import logger
 
 from sqlalchemy import create_engine
 
+
 class SQLQuery(object):
     def __init__(self, uri):
         self.uri = uri
@@ -27,10 +28,15 @@ class SQLQuery(object):
             res = self.conn.execute(sql)
             endtime = datetime.now()
             tmp = {'execute_time': (endtime - starttime).total_seconds(),
-                   'query_result': [resdata[0] for resdata in res.fetchall()]}
+                   'query_result': [list(resdata) for resdata in res.fetchall()]}
             return tmp
         except Exception as e:
             logger.writeerrorlog(e)
             return None
 
+    def insert(self, sql):
+        from sqlalchemy_clickhouse import connector
+        conn1 = connector.connect(db_name='test', db_url='http://10.0.3.218:8123/', username='default', password=123)
+        cursor = conn1.cursor()
+        cursor.execute(sql, is_response=False)
     

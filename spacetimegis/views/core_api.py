@@ -69,8 +69,7 @@ def executesql():
         sql = dict(request.json).get('sql')
         sqlquery = sql_query.SQLQuery(uri)
         res = sqlquery.executesql(sql)
-        json_msg = json.dumps(res)
-        return json_success(json_msg)
+        return json_success(json.dumps(res))
     except Exception as e:
         logger.writeerrorlog(e)
         return json_result(code=500, result=str(e), msg='failue')
