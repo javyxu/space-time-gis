@@ -16,10 +16,11 @@ from colorama import Fore, Style
 from pathlib2 import Path
 
 from spacetimegis import (
-    app
+    app, setting
 )
 
 config = app.config
+celery_app = setting.get_celery_app(config)
 
 @app.cli.command()
 def init():
@@ -74,7 +75,7 @@ def console_log_run(app, port):
                    'Will override the address and port values. [DEPRECATED]')
 def runserver(debug, console_log, address, port, timeout, workers, socket):
     """Starts a spacetimegis web server."""
-    debug = debug or config.get('DEBUG') or console_log
+    debug = debug or config.get('DEBUG') is True or console_log
     if debug:
         print(Fore.BLUE + '-=' * 20)
         print(
@@ -88,9 +89,6 @@ def runserver(debug, console_log, address, port, timeout, workers, socket):
         else:
             debug_run(app, port)
     else:
-        logging.info(
-            "The Gunicorn 'spacetimegis runserver' command is deprecated. Please "
-            "use the 'gunicorn' command instead.")
         addr_str = ' unix:{socket} ' if socket else' {address}:{port} '
         cmd = (
             'gunicorn '
@@ -111,10 +109,47 @@ def runserver(debug, console_log, address, port, timeout, workers, socket):
 def version(verbose):
     """Prints the current version number"""
     print(Fore.BLUE + '-=' * 15)
-    print(Fore.YELLOW + 'spatiotemporaldata ' + Fore.CYAN + '{version}'.format(
+    print(Fore.YELLOW + 'spacetimegis ' + Fore.CYAN + '{version}'.format(
         version=config.get('VERSION_STRING')))
     print(Fore.BLUE + '-=' * 15)
     if verbose:
         print('[DB] : ' + '{}'.format(db.engine))
     print(Style.RESET_ALL)
 
+
+@app.cli.command()
+@click.option('--workers', '-w', type=int,
+    help='Number of celery server workers to fire up')
+def worker(workers):
+    """Starts a SpacetimeGIS worker for async SQL query execution."""
+    if workers:
+        celery_app.conf.update(CELERYD_CONCURRENCY=workers)
+    elif config.get('WORKERS_CONCURRENCY'):
+        celery_app.conf.update(
+            CELERYD_CONCURRENCY=config.get('WORKERS_CONCURRENCY'))
+
+    worker = celery_app.Worker(optimization='fair')
+    worker.start()
+
+
+@app.cli.command()
+@click.option('-p', '--port', default='5555',
+    help='Port on which to start the Flower process')
+@click.option('-a', '--address', default='localhost',
+    help='Address on which to run the service')
+def flower(port, address):
+    """Runs a Celery Flower web server
+    Celery Flower is a UI to monitor the Celery operation on a given
+    broker"""
+    BROKER_URL = config.get('BROKER_URL')
+    cmd = (
+        'celery flower '
+        '--broker={BROKER_URL} '
+        '--port={port} '
+        '--address={address} '
+    ).format(**locals())
+    print(Fore.GREEN + 'Starting a Celery Flower instance')
+    print(Fore.BLUE + '-=' * 40)
+    print(Fore.YELLOW + cmd)
+    print(Fore.BLUE + '-=' * 40)
+    Popen(cmd, shell=True).wait()

@@ -6,6 +6,7 @@
 # Email: xujavy@gmail.com
 # Description: config.py
 '''
+import imp
 import os
 from collections import OrderedDict
 from backports.configparser import ConfigParser, _UNSET, NoOptionError
@@ -209,6 +210,16 @@ class SpacetimeGISConfigParser(ConfigParser):
                 {key.lower(): opt})
 
         return cfg
+    
+    def as_all_dict(self, display_source=False, display_sensitive=False, raw=False):
+        tmp = self.as_dict(display_source, display_sensitive, raw)
+        all_cfg = {}
+        for val in tmp.values():
+            if not all_cfg:
+                all_cfg = val.copy()
+            else:
+                all_cfg.update(val)
+        return all_cfg
 
 
 def mkdir_p(path):
@@ -253,4 +264,9 @@ conf = SpacetimeGISConfigParser(default_config=parameterized_config(DEFAULT_CONF
 
 conf.read(SPACETIMEGIS_CONFIG)
 
-cfg = conf.as_dict()
+
+version = imp.load_source(
+    'spacetimegis.version', os.path.join(os.path.dirname(__file__), 'version.py')).version
+
+cfg = conf.as_all_dict()
+cfg['VERSION_STRING'] = version

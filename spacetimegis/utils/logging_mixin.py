@@ -23,7 +23,7 @@ from spacetimegis.config import cfg
 path = os.path.dirname(os.path.realpath(__file__))
 logconfig = os.path.join(path, "../../logconfig.yml")
 
-logdir = cfg.get('core')['BASE_LOG_FOLDER']
+logdir = cfg.get('BASE_LOG_FOLDER')
 if not os.path.exists(logdir):
     os.mkdir(logdir)
 
