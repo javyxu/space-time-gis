@@ -12,13 +12,14 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from flask import jsonify
-
-from sqlalchemy import and_, or_, UniqueConstraint
-
-from spacetimegis.utils.logging_mixin import logger
+from flask import jsonify, Response
 
 
-def json_result(code=0, result=None, msg='success'):
-    # res = Response(json_msg, status=status, mimetype='application/json')
+def json_result(code=200, result=None, msg='success'):
     return jsonify({"code":code, "result": result, "msg":msg})
+
+def json_success(json_msg, status=200):
+    return Response(json_msg, status=status, mimetype='application/json')
+
+def image_success(obj_msg, status=200):
+    return Response(obj_msg, status=status, mimetype='application/tiff')

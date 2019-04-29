@@ -16,10 +16,16 @@ from flask import Blueprint
 
 from spacetimegis.utils.logging_mixin import logger
 
-from .utils import json_result
+from .utils import json_result, image_success
 
 index_bp = Blueprint('index', __name__)
 
 @index_bp.route('/', methods=['GET'])
 def index():
     return json_result(200, msg='Hello Blueprint!')
+
+@index_bp.route('/getimage', methods=['GET'])
+def getimg():
+    with open('/Users/xujavy/Documents/Work/srccode/space-time-gis/examples_data/test_00.tif','rb') as f:
+        resdata = bytearray(f.read())
+    return image_success(resdata)

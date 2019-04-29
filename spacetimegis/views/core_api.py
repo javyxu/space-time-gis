@@ -5,12 +5,14 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import simplejson as json
+
 from spacetimegis import db
-from spacetimegis.models import core
+from spacetimegis.models import core, sql_query
 from spacetimegis.utils.logging_mixin import logger
 
 from flask import request, Blueprint
-from .utils import json_result
+from .utils import json_result, json_success
 
 core_bp = Blueprint('core', __name__)
 
@@ -54,7 +56,21 @@ def deletedbs():
         session.delete(o)
         session.commit()
         session.close()
+        return json_result(result=None)
     except Exception as e:
         logger.writeerrorlog(e)
         return json_result(code=500, result=str(e), msg='failue')
-    return json_result(result=None)
+
+
+@core_bp.route('/executesql', methods=['GET'])
+def executesql():
+    try:
+        uri = dict(request.json).get('uri')
+        sql = dict(request.json).get('sql')
+        sqlquery = sql_query.SQLQuery(uri)
+        res = sqlquery.executesql(sql)
+        json_msg = json.dumps(res)
+        return json_success(json_msg)
+    except Exception as e:
+        logger.writeerrorlog(e)
+        return json_result(code=500, result=str(e), msg='failue')
