@@ -16,11 +16,11 @@ from colorama import Fore, Style
 from pathlib2 import Path
 
 from spacetimegis import (
-    app, setting
+    app, settings
 )
 
 config = app.config
-celery_app = setting.get_celery_app(config)
+celery_app = settings.get_celery_app(config)
 
 @app.cli.command()
 def init():
@@ -75,6 +75,7 @@ def console_log_run(app, port):
                    'Will override the address and port values. [DEPRECATED]')
 def runserver(debug, console_log, address, port, timeout, workers, socket):
     """Starts a spacetimegis web server."""
+    print(settings.HEADER)
     debug = debug or config.get('DEBUG') is True or console_log
     if debug:
         print(Fore.BLUE + '-=' * 20)
@@ -108,6 +109,7 @@ def runserver(debug, console_log, address, port, timeout, workers, socket):
 @click.option('--verbose', '-v', is_flag=True, help='Show extra information')
 def version(verbose):
     """Prints the current version number"""
+    print(settings.HEADER)
     print(Fore.BLUE + '-=' * 15)
     print(Fore.YELLOW + 'spacetimegis ' + Fore.CYAN + '{version}'.format(
         version=config.get('VERSION_STRING')))
@@ -122,6 +124,7 @@ def version(verbose):
     help='Number of celery server workers to fire up')
 def worker(workers):
     """Starts a SpacetimeGIS worker for async SQL query execution."""
+    print(settings.HEADER)
     if workers:
         celery_app.conf.update(CELERYD_CONCURRENCY=workers)
     elif config.get('WORKERS_CONCURRENCY'):
@@ -141,6 +144,7 @@ def flower(port, address):
     """Runs a Celery Flower web server
     Celery Flower is a UI to monitor the Celery operation on a given
     broker"""
+    print(settings.HEADER)
     BROKER_URL = config.get('BROKER_URL')
     cmd = (
         'celery flower '

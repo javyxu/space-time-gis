@@ -18,7 +18,7 @@ import os
 
 from spacetimegis.constants import LogLevel
 
-from spacetimegis.config import cfg
+from spacetimegis.settings import cfg
 
 path = os.path.dirname(os.path.realpath(__file__))
 logconfig = os.path.join(path, "../../logconfig.yml")

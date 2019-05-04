@@ -16,7 +16,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from spacetimegis.config import cfg
+from spacetimegis.settings import cfg
 
 APP_DIR = os.path.dirname(__file__)
 

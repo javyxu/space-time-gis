@@ -27,7 +27,7 @@ def download_agora():
         path = request.args.get('savepath')
         ts, links = get_ty_links()
         download_imgs(path, ts, links)
+        return json_result(200, msg='download sucess!')
     except Exception as e:
         logger.writeerrorlog(e)
         return json_result(500, msg='download failure!')
-    return json_result(200, msg='download sucess!')

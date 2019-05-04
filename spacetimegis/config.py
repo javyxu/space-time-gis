@@ -6,7 +6,6 @@
 # Email: xujavy@gmail.com
 # Description: config.py
 '''
-import imp
 import os
 from collections import OrderedDict
 from backports.configparser import ConfigParser, _UNSET, NoOptionError
@@ -263,10 +262,3 @@ if not os.path.isfile(SPACETIMEGIS_CONFIG):
 conf = SpacetimeGISConfigParser(default_config=parameterized_config(DEFAULT_CONFIG))
 
 conf.read(SPACETIMEGIS_CONFIG)
-
-
-version = imp.load_source(
-    'spacetimegis.version', os.path.join(os.path.dirname(__file__), 'version.py')).version
-
-cfg = conf.as_all_dict()
-cfg['VERSION_STRING'] = version
