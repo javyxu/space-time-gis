@@ -1,6 +1,5 @@
 # bleach==2.1.2
 rasterio
-gdal
 sqlalchemy
 geoalchemy2
 psycopg2-binary

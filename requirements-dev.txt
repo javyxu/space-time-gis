@@ -1,6 +1,5 @@
 console_log==0.2.10
 rasterio
-gdal
 sqlalchemy
 geoalchemy2
 psycopg2-binary
