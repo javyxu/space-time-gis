@@ -12,5 +12,8 @@ Space-time GIS
 
    intro
    install
+   Configuration
+   Database dependencies
+   SQL Editor
    examples
    contributing
