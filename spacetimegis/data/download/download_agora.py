@@ -14,6 +14,11 @@ from bs4 import BeautifulSoup
 
 from spacetimegis.utils.logging_mixin import logger
 from spacetimegis.constants import LogLevel
+from spacetimegis.settings import get_celery_app
+from spacetimegis import app
+
+config = app.config
+celery_app = get_celery_app(config)
 
 def get_ty_links():
     logger.writelog(LogLevel.info, '======== start get typhoon links ========')
@@ -148,3 +153,8 @@ def rename(fname): # there maybe some unexcepted char in fname, drop them
     new_fname = new_fname.replace('\'','')
     new_fname = new_fname.replace(', ', '.')
     return new_fname
+
+@celery_app.task(bind=True)
+def download(self, path):
+    ts, links = get_ty_links()
+    task_id = download_imgs(path, ts, links)

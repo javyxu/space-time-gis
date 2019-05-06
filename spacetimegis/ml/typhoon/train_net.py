@@ -10,6 +10,8 @@ import os
 
 from spacetimegis.utils.logging_mixin import logger
 from spacetimegis.constants import LogLevel
+from spacetimegis.settings import get_celery_app
+from spacetimegis import app
 
 from .define_net import Net
 from .transform import transform
@@ -20,6 +22,8 @@ import torch.nn.init as init
 import torch.optim as optim
 import torch
 import torchvision
+
+celery_app = get_celery_app(app.config)
 
 def testset_loss(dataset, network):
     loader = torch.utils.data.DataLoader(dataset)
@@ -34,8 +38,8 @@ def testset_loss(dataset, network):
 
     return all_loss / i
 
-
-def execute(path_):
+@celery_app.task(bind=True)
+def execute(self, path_):
     # path_ = os.path.abspath('.')
     trainset = ImageFolder(path_ + '/train_set/', transform)
     trainloader = torch.utils.data.DataLoader(trainset)

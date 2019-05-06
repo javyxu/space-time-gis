@@ -18,8 +18,13 @@ from torch.autograd import Variable
 
 from spacetimegis.utils.logging_mixin import logger
 from spacetimegis.constants import LogLevel
+from spacetimegis.settings import get_celery_app
+from spacetimegis import app
 
-def execute(path_):
+celery_app = get_celery_app(app.config)
+
+@celery_app.task(bind=True)
+def execute(self, path_):
     net = Net() 
     if torch.cuda.is_available():
         net.cuda()
