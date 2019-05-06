@@ -83,3 +83,5 @@ def execute(self, path_):
 
     logger.writelog(LogLevel.info, 'Finished Training')
     torch.save(net.state_dict(), path_ + '/net_relu.pth')
+    
+    return {'current': 100, 'total': 100, 'status': 'Task completed!'}

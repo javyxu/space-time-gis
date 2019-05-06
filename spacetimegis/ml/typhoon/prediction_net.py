@@ -72,3 +72,5 @@ def execute(self, path_):
     with open(path_ + '/result_relu.txt', 'w') as f:
         for ty in tys_time:
             f.write(str(ty) + '\n') # record all result by time
+    
+    return {'current': 100, 'total': 100, 'status': 'Task completed!'}

@@ -151,3 +151,5 @@ def execute(self, path_):
                 logger.writeinfolog('have processed ', i + 1,' files.')
           
         logger.writeinfolog('items in test set: ' + str(count))
+    
+    return {'current': 100, 'total': 100, 'status': 'Task completed!'}
