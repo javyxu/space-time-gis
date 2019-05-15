@@ -28,7 +28,8 @@ class SQLQuery(object):
             res = self.conn.execute(sql)
             endtime = datetime.now()
             tmp = {'execute_time': (endtime - starttime).total_seconds(),
-                   'query_result': [list(resdata) for resdata in res.fetchall()]}
+                   'query_result': [dict(r) for r in res.fetchall()]}
+                #    'query_result': [list(resdata) for resdata in res.fetchall()]}
             return tmp
         except Exception as e:
             logger.writeerrorlog(e)
