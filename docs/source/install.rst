@@ -18,7 +18,7 @@ You can get the library directly from PyPI:
     > spacetimegis worker 
     > spacetimegis runserver
 
-Before installing eo-learn on Windows it is recommended to install the following packages
+Before installing spacetimegis on Windows it is recommended to install the following packages
 
 .. code-block:: console
 

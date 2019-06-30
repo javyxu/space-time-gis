@@ -22,7 +22,7 @@ jar_dirs = [(jar, os.path.dirname(jar)) for jar in module_jars]
 jars = [jar_dirs[0][0]]
 jar_string= ",".join(set(jars))
 
-spark_home = cfg.get('spark')['SPARK_HOME')
+spark_home = cfg.get('spark')['SPARK_HOME']
 if not spark_home:
     logger.writedebuglog('please set SPARK_HOME in spacetimegis.cfg')
     logger.writeinfolog('please set SPARK_HOME in spacetimegis.cfg')
